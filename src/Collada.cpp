@@ -680,6 +680,18 @@ void Collada::addEffect(string name, bool isSampler2D, string nameTexture, strin
 		TiXmlElement* node_source = new TiXmlElement("source");
 		node_sampler2D->LinkEndChild(node_source);
 		node_source->LinkEndChild(new TiXmlText(name + "_surface"));
+		
+		if (true) {
+			TiXmlElement* node_wrap_s = new TiXmlElement("wrap_s");
+			node_sampler2D->LinkEndChild(node_wrap_s);
+			node_wrap_s->LinkEndChild(new TiXmlText("MIRROR"));
+		}
+	
+		if (true) {
+			TiXmlElement* node_wrap_t = new TiXmlElement("wrap_t");
+			node_sampler2D->LinkEndChild(node_wrap_t);
+			node_wrap_t->LinkEndChild(new TiXmlText("MIRROR"));
+		}
 
 		TiXmlElement* node_minfilter = new TiXmlElement("minfilter");
 		node_sampler2D->LinkEndChild(node_minfilter);

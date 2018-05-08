@@ -1637,10 +1637,6 @@ void Swr_Model::write_Xml(TiXmlElement *parent, const uint8_t *buf, size_t size,
 								node = new TiXmlElement("unk60"); node->SetAttribute("u32", UnsignedToString(val32(section5->unk60), true)); node_section5->LinkEndChild(node);
 
 								size_t textureIndex = val32(section5->textureMaskAndIndex) & 0x00FFFFFF;
-								materialName = "Mat_" + UnsignedToString(textureIndex, false);
-								collada->addTextureMaterial(materialName, "texture_"+ UnsignedToString(textureIndex, false) +".png");
-								collada_collision->addTextureMaterial(materialName, "texture_" + UnsignedToString(textureIndex, false) + ".png");
-
 
 								if (root_textures)
 								{
@@ -1693,7 +1689,7 @@ void Swr_Model::write_Xml(TiXmlElement *parent, const uint8_t *buf, size_t size,
 								*/
 
 								
-
+								int wrap_flags = -1;
 								for (size_t m = 0; m < 5; m++)
 								{
 									if (!section5->offset_Section5_b[m])
@@ -1719,7 +1715,20 @@ void Swr_Model::write_Xml(TiXmlElement *parent, const uint8_t *buf, size_t size,
 									node = new TiXmlElement("unk8"); node->SetAttribute("u32", UnsignedToString(val32(section5_b->unk8), true)); node_section5b->LinkEndChild(node);
 									node = new TiXmlElement("unk12"); node->SetAttribute("u16", UnsignedToString(val16(section5_b->unk12), true)); node_section5b->LinkEndChild(node);
 									node = new TiXmlElement("unk14"); node->SetAttribute("u16", UnsignedToString(val16(section5_b->unk14), true)); node_section5b->LinkEndChild(node);
+
+									// Only use the first flag, then expect all others to use the same
+									if (wrap_flags == -1) {
+										wrap_flags = section5_b->unk3 & 0x11;
+									} else {
+										assert(wrap_flags == (section5_b->unk3 & 0x11));
+									}
+
 								}
+
+								materialName = "Mat_" + UnsignedToString(textureIndex, false);
+								collada->addTextureMaterial(materialName, "texture_"+ UnsignedToString(textureIndex, false) +".png");
+								collada_collision->addTextureMaterial(materialName, "texture_" + UnsignedToString(textureIndex, false) + ".png");
+
 
 							}
 
