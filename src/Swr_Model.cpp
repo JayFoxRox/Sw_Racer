@@ -352,6 +352,9 @@ std::vector<string> Swr_Model::splitModelFile(string filename, bool show_error)
 			TiXmlElement* node_file = new TiXmlElement("File");
 			node_listFiles->LinkEndChild(node_file);
 			node_file->SetAttribute("name", newFilename);
+			node_file->SetAttribute("fake_header_size", UnsignedToString(4 * sizeof(uint32_t), false));
+			node_file->SetAttribute("offset_section1", UnsignedToString(hdr->offset_Section1, true));
+			node_file->SetAttribute("offset_section2", UnsignedToString(hdr->offset_Section2, true));
 
 
 			size_t sizeSection1 = hdr->offset_Section2 - hdr->offset_Section1;
@@ -799,7 +802,8 @@ void Swr_Model::write_Xml(TiXmlElement *parent, const uint8_t *buf, size_t size,
 		node_models->LinkEndChild(node_model);
 
 
-
+    node_models->SetAttribute("offset_section1", UnsignedToString(hdr->offset_Section1, true));
+    node_models->SetAttribute("offset_section2", UnsignedToString(hdr->offset_Section2, true));
 
 
 		//Section1 		
@@ -827,7 +831,6 @@ void Swr_Model::write_Xml(TiXmlElement *parent, const uint8_t *buf, size_t size,
 			notifyWarning();
 			continue;
 		}
-
 
 		//todo take care of Comp (case N64)
 
@@ -1847,6 +1850,9 @@ void Swr_Model::write_Xml(TiXmlElement *parent, const uint8_t *buf, size_t size,
 
 							
 							TiXmlElement* node_section7 = new TiXmlElement("Section7");
+
+              node_section7->SetAttribute("offset", UnsignedToString(startoffset_section7, true));
+
 							if (!XMLTEST_SoKeepSmaller)
 								node_section3->LinkEndChild(node_section7);
 							else
